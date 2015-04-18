@@ -1,6 +1,8 @@
 Arduino IDE 1.6.3 for Raspberry Pi
 ==================================
 
+![Header](header.png)
+
 All credit goes to ShortTie who made this awesome patch.
 This repository hosts compiled packages, the patches and additional instructions and notes.
 
