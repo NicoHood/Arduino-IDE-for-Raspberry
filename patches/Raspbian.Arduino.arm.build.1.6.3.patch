@@ -1,0 +1,1551 @@
+diff -ruN debian.orig/arduino-core.links debian/arduino-core.links
+--- debian.orig/arduino-core.links	2015-04-18 14:55:34.301744269 +0200
++++ debian/arduino-core.links	2015-04-06 10:00:18.000000000 +0200
+@@ -1,9 +1,3 @@
+-/etc/avrdude.conf /usr/share/arduino/hardware/tools/avrdude.conf
+-/usr/bin/avrdude /usr/share/arduino/hardware/tools/avrdude
+-/usr/bin/bossac /usr/share/arduino/hardware/tools/bossac
+ /usr/share/doc/arduino-core/examples /usr/share/arduino/examples
+ /usr/share/doc/arduino-core/reference /usr/share/arduino/reference
+-/usr/bin /usr/share/arduino/hardware/tools/avr/bin
+-/usr/lib /usr/share/arduino/hardware/tools/avr/lib
+ /usr/share/doc /usr/share/arduino/hardware/tools/avr/share/doc
+-
+diff -ruN debian.orig/arduino.README.Debian debian/arduino.README.Debian
+--- debian.orig/arduino.README.Debian	2015-04-18 14:55:34.341738444 +0200
++++ debian/arduino.README.Debian	2015-04-08 10:53:12.000000000 +0200
+@@ -3,32 +3,9 @@
+ 
+ User must be in the dialout group in order to write to USB/Serial ports.
+ 
+-Fedora uses zenity to ask if a user wants to be added, but it is a big download.
+-
+ I wrote our own java code, in debian/permission-checker, which will ask if the
+ user would like to be added, then runs a script with pkexec to add the user
+ to the dialout group.
+ 
+ --Scott Howard <showard@debian.org>, Dec 12, 2011
+ 
+-
+-
+-
+-
+-Note for non-reparenting window manager users
+----------------------------------------------
+-
+-If you are using a non-reparenting window manager, such as ratpoison, awesome
+-or dwm, some Java graphical applications using the AWT toolkit will only
+-display empty grey windows, as described in bug #508650.
+-
+-There are two solutions to work around this issue:
+-1. mask your window manager as one of the non-reparenting ones supported by AWT,
+-  using the wmname <http://tools.suckless.org/wmname> tool from the dwm-tools
+-  package:
+-  $ wmname LG3D
+-2. set the environment variable _JAVA_AWT_WM_NONREPARENTING:
+-  $ export _JAVA_AWT_WM_NONREPARENTING=true
+-
+-You can automate these tasks by writing them to your ~/.xsessionrc:
+-$ echo export _JAVA_AWT_WM_NONREPARENTING=true >> ~/.xsessionrc
+diff -ruN debian.orig/changelog debian/changelog
+--- debian.orig/changelog	2015-04-18 14:55:34.351736988 +0200
++++ debian/changelog	2015-04-06 00:59:10.000000000 +0200
+@@ -1,417 +1,5 @@
+-arduino (2:1.5.6.2+sdfsg2-3) experimental; urgency=low
++arduino (2:1.6.3) experimental; urgency=low
+ 
+-  * debian/patches/system_libastylej.patch: use system libastylej
+-    upstream uses a patched version that changed java package name.
++  * updated to Arduino 1.6.3
+ 
+- -- Scott Howard <showard@debian.org>  Sun, 06 Apr 2014 18:33:35 -0400
+-
+-arduino (2:1.5.6.2+sdfsg2-2) experimental; urgency=low
+-
+-  * Bump epoch to fix versioning problem with arduino-mk
+-
+- -- Scott Howard <showard@debian.org>  Wed, 02 Apr 2014 16:50:56 -0400
+-
+-arduino (1:1.5.6.2+sdfsg2-1) experimental; urgency=low
+-
+-  * Place arduino 1.5.6 into experimental.
+-
+- -- Scott Howard <showard@debian.org>  Tue, 01 Apr 2014 16:52:45 -0400
+-
+-arduino (1:1.5.6.2+dfsg2-1) unstable; urgency=low
+-
+-  * New upstream release
+-  * Remove dependency and link to rxtx, upstream uses libjssc-java now
+-  * arduino-core recommends bossa-cli
+-  * debian/patches/zepto_js.patch, adds source code for zepto.js
+-  * refreshed patches
+-  * arduino depends on libastylej-jni
+-    - debian/patches/no_download_libastylej.patch to use system libastylej
+-
+- -- Scott Howard <showard@debian.org>  Fri, 07 Mar 2014 12:17:38 -0500
+-
+-arduino (1:1.0.5+dfsg2-2) unstable; urgency=low
+-
+-  * remove link to web-based icons in documentation. Fixes privacy
+-    violation, thanks lintian.
+-
+- -- Scott Howard <showard@debian.org>  Fri, 14 Feb 2014 16:41:41 -0500
+-
+-arduino (1:1.5.4.2+dfsg-3) experimental; urgency=low
+-
+-  * Don't distribute sourceless minified .js files (Closes: #735229)
+-    - needs libraries/Bridge/examples/TemperatureWebPanel/www/zepto.min.js
+-  * Debian S-V 3.9.5, no changes
+-
+- -- Scott Howard <showard@debian.org>  Mon, 13 Jan 2014 23:02:40 -0500
+-
+-arduino (1:1.5.4.2+dfsg-2) experimental; urgency=low
+-
+-  * Use jh_depends to manage dependencies.
+-  * add -fno-caller-saves compiler flag (see debian bug 698254)
+-
+- -- Scott Howard <showard@debian.org>  Fri, 11 Oct 2013 16:20:12 -0400
+-
+-arduino (1:1.5.4.2+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release (Closes: #721742)
+-  * Refreshed patches:
+-      deleted:    debian/patches/Adafruit_GFX.patch (accepted upstream)
+-      deleted:    debian/patches/no-caller-saves.patch (AVR bug, needs testing,
+-                  possibly reapply)
+-      deleted:    debian/patches/roboIRread.patch (accepted upstream)
+-
+- -- Scott Howard <showard@debian.org>  Fri, 11 Oct 2013 12:36:34 -0400
+-
+-arduino (1:1.0.5+dfsg2-1) unstable; urgency=low
+-
+-  * New upstream release
+-  * removed debian/patches/fr_fix.diff, applied upstream
+-  * Added Keywords to arduino.desktop
+-  * SV 3.9.4 no changes
+-  * Vcs-* changed to cannonical URLs
+-  * New patches:
+-    - debian/patches/Adafruit_GFX.patch: fixed typo
+-    - debian/patches/const_progmem.patch: PROGMEM variables must be
+-      consts
+-    - debian/patches/depricated_typedef_support.patch: enable
+-      compatibility support for avr-libc depricated typedefs
+-    - debian/patches/roboIRread.patch: fixed typos
+-
+- -- Scott Howard <showard@debian.org>  Tue, 04 Jun 2013 11:58:36 -0400
+-
+-arduino (1:1.0.4+dfsg-2) unstable; urgency=low
+-
+-  * Merge from experimental
+-  * Create symoblic link /usr/share/arduino/harware/tools/avr to /usr
+-    Thanks to Alessandro Ghedini (Closes: #704001)
+-
+- -- Scott Howard <showard@debian.org>  Sun, 05 May 2013 14:46:53 -0400
+-
+-arduino (1:1.0.4+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release.
+-
+- -- Scott Howard <showard@debian.org>  Mon, 18 Mar 2013 22:14:36 -0400
+-
+-arduino (1:1.0.3+dfsg-2) experimental; urgency=low
+-
+-  * debian/patches/no-caller-saves.patch
+-    - workaround for GCC 4.7 bug, WiFi.cpp won't compile (Closes: #698254)
+-      (LP: #1112499)
+-
+- -- Scott Howard <showard@debian.org>  Fri, 01 Feb 2013 09:47:46 -0500
+-
+-arduino (1:1.0.3+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release. Updated debian/copyright and added copyright_check
+-    rule to debian/rules
+-
+- -- Scott Howard <showard@debian.org>  Fri, 28 Dec 2012 11:45:55 -0500
+-
+-arduino (1:1.0.2+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release
+-    - No wifishield firmware inluded in Debian: pre-compiled avr32 binaries
+-      with no sane build system. For source code and binaries, see the 
+-      wifishield repo on github
+-  * refreshed patches:
+-    - debian/patches/SimpleDateFormat_fix.diff deleted, applied upstream
+-    - debian/patches/gcc47_avr.patch updated, partially applied upstream
+-    - debian/patches/wrapper_for_deb.patch updated, partially applied upstream
+-  * Updated debian/copyright for new files
+-
+- -- Scott Howard <showard@debian.org>  Mon, 05 Nov 2012 13:53:48 -0500
+-
+-arduino (1:1.0.1+dfsg-7) unstable; urgency=low
+-
+-  * Fixed another gcc 4.7 related bug in Ethernet library due to IPAddress
+-    pointing to either a uint8_t or unint32_t IP address (Closes: #689325)
+-    Thanks to Francesco Apollonio
+-
+- -- Scott Howard <showard@debian.org>  Tue, 02 Oct 2012 15:19:56 -0400
+-
+-arduino (1:1.0.1+dfsg-6) unstable; urgency=low
+-
+-  * Fixes gcc 4.7 related build failure of Ethernet library
+-    (Closes: #684748)
+-
+- -- Scott Howard <showard@debian.org>  Fri, 24 Aug 2012 09:29:34 -0400
+-
+-arduino (1:1.0.1+dfsg-5) unstable; urgency=low
+-
+-  * Updated Resources_fr.propertues to fix French transtaion of Copy
+-    in Edit menu (Closes: #682079)
+-
+- -- Scott Howard <showard@debian.org>  Mon, 30 Jul 2012 11:04:58 -0400
+-
+-arduino (1:1.0.1+dfsg-4) unstable; urgency=low
+-
+-  * Fixed French translation of "Copy" in "Edit" menu (Closes: #682079)
+-
+- -- Scott Howard <showard@debian.org>  Thu, 19 Jul 2012 13:51:07 -0400
+-
+-arduino (1:1.0.1+dfsg-3) unstable; urgency=low
+-
+-  * Fixed spelling error in pop-up window that adds users to dialout
+-    group. Clarified that clicking "Add" will add you to the group.
+-    (Closes: #677376)
+-  * Added patches for core library using gcc-avr 4.7 (Closes: #677294)
+-
+- -- Scott Howard <showard@debian.org>  Wed, 13 Jun 2012 10:30:23 -0400
+-
+-arduino (1:1.0.1+dfsg-2) unstable; urgency=low
+-
+-  * debian/patches/SimpleDateFormat_fix.diff
+-    - Arduino would fail to launch if date strings were improperly
+-      translated. (Closes: #674415)
+-
+- -- Scott Howard <showard@debian.org>  Sun, 03 Jun 2012 16:35:24 -0400
+-
+-arduino (1:1.0.1+dfsg-1) unstable; urgency=low
+-
+-  * New upstream release.
+-
+- -- Scott Howard <showard@debian.org>  Tue, 22 May 2012 09:26:04 -0400
+-
+-arduino (1:1.0.1~rc2+dfsg-2) experimental; urgency=low
+-
+-  * Allow for opening file from command line or file manager
+-    e.g. "$ arduino {filename}.ino" (LP: #998952)
+-  * Properly detect groups assigned by PAM (Closes: #669058)
+-
+- -- Scott Howard <showard@debian.org>  Mon, 14 May 2012 00:05:04 -0400
+-
+-arduino (1:1.0.1~rc2+dfsg-1) experimental; urgency=low
+-
+-  * Updated watch file, remove compressed avrtools that upstream added
+-  * New upstream release.
+-
+- -- Scott Howard <showard@debian.org>  Wed, 11 Apr 2012 23:21:24 -0400
+-
+-arduino (1:1.0.1~rc1+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release, experimental.
+-
+- -- Scott Howard <showard@debian.org>  Sun, 11 Mar 2012 18:19:42 -0400
+-
+-arduino (1:1.0+dfsg-9) unstable; urgency=low
+-
+-  * *.pde has been renamed *.ino by upstream. debian/rules changed
+-    to not compress *.ino
+-
+- -- Scott Howard <showard@debian.org>  Thu, 01 Mar 2012 15:58:45 -0500
+-
+-arduino (1:1.0+dfsg-8) unstable; urgency=low
+-
+-  * Made the bootloader makefile script executable, no need for lintian
+-    overrides any more (arduino/hardware/arduino/bootloaders/optboot/makeall)
+-  * Removed all mjo makefile patches from package. Arduino-mk is now
+-    suggested by arduino-core.
+-  * Debian S-R 3.9.3 no changes
+-
+- -- Scott Howard <showard@debian.org>  Sun, 26 Feb 2012 10:52:34 -0500
+-
+-arduino (1:1.0+dfsg-7) unstable; urgency=low
+-
+-  * arduino-core depends on libconfig-yaml-perl. Ship mjo/ard-parse-boards
+-    (Closes: #660271). Will eventually drop that depend and move all mjo/
+-    to new package now that there are regular releases.
+-
+- -- Scott Howard <showard@debian.org>  Sat, 18 Feb 2012 12:01:40 -0500
+-
+-arduino (1:1.0+dfsg-6) unstable; urgency=low
+-
+-  * New upstream release of mjo makefile (0.8). debian/patches/mjo* updated
+-    - Patches for version 1.0 of the Arduino IDE. Older versions might still
+-      work, but I've not tested it.
+-    - A change to the build process: rather than link all the system objects
+-      directly into the executable, bundle them in a library first. This
+-      should make the final executable smaller.
+-    - If TARGET isn't explicitly set, default to the current directory name.
+-      Thanks to Daniele Vergini for this patch.
+-    - Add support for .c files in system libraries: Dirk-Willem van Gulik and
+-      Evan Goldenberg both reported this and provided patches in the same
+-      spirit.
+-    - Added a size target as suggested by Alex Satrapa.
+-
+-
+- -- Scott Howard <showard@debian.org>  Sun, 12 Feb 2012 17:33:27 -0500
+-
+-arduino (1:1.0+dfsg-5) unstable; urgency=low
+-
+-  * Updated Arduino.mk and arduino-cli.html in arduino-core for
+-    version 1.0 of IDE (Closes: #654162) Thanks to Antoine Sirinelli.
+-
+- -- Scott Howard <showard@debian.org>  Sun, 22 Jan 2012 00:55:49 -0500
+-
+-arduino (1:1.0+dfsg-4) unstable; urgency=low
+-
+-  * policykit moved to Recommends. Package can be configured
+-    and work without policykit (Closes: #653295)
+-  * Dependency on zenity removed (Closes: #653296). Uses Debian
+-    specefic checker in debian/permission-checker instead (written in
+-    java as to pull in no extra dependencies).
+-
+- -- Scott Howard <showard@debian.org>  Tue, 27 Dec 2011 12:21:24 -0500
+-
+-arduino (1:1.0+dfsg-3) unstable; urgency=low
+-
+-  * Only add user to dialout group, not tty. Testing shows only
+-    dialout is necessary, and don't want to add extra permissions.
+-  * added manpage for arduino-add-groups
+-
+- -- Scott Howard <showard@debian.org>  Fri, 23 Dec 2011 11:03:49 -0500
+-
+-arduino (1:1.0+dfsg-2) unstable; urgency=low
+-
+-  * Historic arduino main.cxx and Makefile removed in favor of
+-    /usr/share/arduino/Arduino.mk. (Closes: #652571)
+-  * Updated debian/watch to ignore versions starting with 00
+-  * debian/patches/permission_fix.patch,
+-    debian/dist/cc.arduino.add-groups.policy,
+-    debian/dist/arduino-add-groups added to add users to dailout and
+-    tty groups if needed. (Closes: #652523)
+-  * Added debian/arduino.sharedmimeinfo
+-
+- -- Scott Howard <showard@debian.org>  Sun, 18 Dec 2011 21:12:15 -0500
+-
+-arduino (1:1.0+dfsg-1) unstable; urgency=low
+-
+-  * New upstream release
+-  * debian/patches/arduino_protocol_avrdude_510.patch removed, applied upstream
+-
+- -- Scott Howard <showard@debian.org>  Mon, 05 Dec 2011 18:36:02 -0500
+-
+-arduino (1:1.0~beta1+dfsg-1) experimental; urgency=low
+-
+-  * New upstream beta release
+-  * Added new icons for hicolor theme
+-  * refreshed patches
+-  * Fix for Ethernet library with gcc-avr 4.5.3 (Closes: #645321,
+-    LP: #865266)
+-
+- -- Scott Howard <showard@debian.org>  Wed, 19 Oct 2011 10:01:21 -0400
+-
+-arduino (0022+dfsg-3) unstable; urgency=low
+-
+-  * Moved all non-java bits to arduino-core (Closes: #613812)
+-  * Edited Makefile to compile libraries during Makefile builds.
+-    - debian/patches/makefile_libraries.diff (Closes: #594191)
+-      Thanks to Stefan Tomanek
+-  * debian/icons/* debian/arduino.xpm  New icons, thanks to Peter Oliver.
+-
+- -- Scott Howard <showard@debian.org>  Tue, 29 Mar 2011 11:01:22 -0400
+-
+-arduino (0022+dfsg-2) unstable; urgency=low
+-
+-  * Updated debian/watch (Closes: #611745)
+-  * debian/control
+-    - DM-U-A removed, changed maintainer to @debian.org
+-    - versioned depends on rxtx (>=2.2pre2-3) for Arduino Uno support
+-  * debhelper 8 and debian/compat 8
+-
+- -- Scott Howard <showard@debian.org>  Thu, 10 Feb 2011 22:50:33 -0500
+-
+-arduino (0022+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release.
+-  * Dependency pruning: no need to depend on libecj-java, liboro-java
+-  * Refreshed patches, removed convet_to_debian_oro.patch (no longer
+-    needed)
+-  * Fixed typo in description (Closes: #608334, LP: #695481)
+-
+- -- Scott Howard <showard314@gmail.com>  Sat, 08 Jan 2011 11:02:17 -0500
+-
+-arduino (0021+dfsg-3) experimental; urgency=low
+-
+-  * Corrected wrapper LD_LIBRARY_PATH variable in case it is not set
+-    debian/patches/wrapper_for_deb.patch
+-  * debian/patches/remove_update_warning.patch
+-    -Removed notification of new upstream versions (Closes: #603818)
+-  * Dependency pruning: no need to depend on a jdk or ant
+-
+- -- Scott Howard <showard314@gmail.com>  Sat, 20 Nov 2010 11:25:00 -0500
+-
+-arduino (0018+dfsg-6) unstable; urgency=low
+-
+-   * Properly sets LD_LIBRARY_PATH in the arduino wrapper if it has not
+-     be previously defined or empty. See Debian bug 602041.
+-   * Corrected typo in arduino (0018+dfsg-5) debian/changelog entry
+-     /usr/lib/jni is correct (used to be /usr/lib/java, which is
+-     incorrect)
+-
+- -- Scott Howard <showard314@gmail.com>  Mon, 01 Nov 2010 20:47:30 -0400
+-
+-arduino (0018+dfsg-5) unstable; urgency=low
+-
+-   * Sets LD_LIBRARY_PATH in the arduino wrapper to look in /usr/lib/jni.
+-     This allows arduino to start when using a sun-java jre. See Debian
+-     bug 382686.
+-
+- -- Scott Howard <showard314@gmail.com>  Sat, 30 Oct 2010 11:26:53 -0400 
+-
+-arduino (0021+dfsg-2) experimental; urgency=low
+-
+-  * updates wrapper_for_deb.patch to set the LD_LIBRARY_PATH for sun-java
+-    jre. (LP: #664309)
+-  * debian/patches/install_jar_links.patch
+-    - Added patch to install symlinks for Debian java library packages.
+-
+- -- Scott Howard <showard314@gmail.com>  Sun, 24 Oct 2010 22:27:17 -0400
+-
+-arduino (0021+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release (debian/rules get-orig-source target updated)
+-
+- -- Scott Howard <showard314@gmail.com>  Tue, 05 Oct 2010 22:10:54 -0400
+-
+-arduino (0019+dfsg-1) experimental; urgency=low
+-
+-  * New upstream release
+-    - switch to ant build system
+-    - refreshed patches
+-  * Debian policy 3.9.1
+-
+- -- Scott Howard <showard314@gmail.com>  Wed, 08 Sep 2010 18:54:10 -0400
+-
+-arduino (0018+dfsg-4) unstable; urgency=low
+-
+-  * Corrected and added stanzas to debian/copyright for
+-    - libraries/Ethernet/utility/w5100.* (GPL-2)
+-    - examples/ArduinoISP/ArduinoISP.pde (BSD)
+-    Thanks to Eberhard Fahle.
+-  * Depends on openjdk-6-jdk OR sun-java6-jdk. Thanks to Guillermo Reisch
+-  * Added support for Debian's avrdude upload protocol in
+-    hardware/arduino/boards.txt, thanks to Ami Chayun (Closes: 588083)
+-  * Debian policy 3.9.0 (no changes)
+-
+- -- Scott Howard <showard314@gmail.com>  Wed, 07 Jul 2010 21:50:09 -0400
+-
+-arduino (0018+dfsg-3) unstable; urgency=low
+-
+-  * Removed unneeded javadoc and arduino.jar to usr/share/arduino/
+-  * Changed Priority to extra (Closses: #586782)
+-
+- -- Scott Howard <showard314@gmail.com>  Fri, 25 Jun 2010 18:36:16 -0400
+-
+-arduino (0018+dfsg-2) unstable; urgency=low
+-
+-  [ Philip Hands ]
+-  * Merge arduino-core into full Java package
+-  * Use 0.4 version of Martin Oldfield's Arduino.mk
+-
+-  [ Scott Howard ]
+-  * Added a arduino.README.Debian for users with non-reparenting WMs
+-  * Added Philip Hands as an uploader and Vcs info to debian/control
+-  * Installs reference/ and examples/ to /usr/share/doc and links from
+-    /usr/share/arduino
+-  * added prefixes to files in a debian directory for arduino and
+-    arduino-core package files
+-
+- -- Philip Hands <phil@hands.com>  Tue, 08 Jun 2010 20:14:01 +0100
+-
+-arduino (0018+dfsg-1) unstable; urgency=low
+-
+-  * Initial release. (Closes: #577249)
+-
+- -- Scott Howard <showard314@gmail.com>  Tue, 13 Apr 2010 22:32:24 -0400
++ -- ShorTie <idiot@dot.com>  Thu, 2 Apr 2015 04:20:00 -0500
+diff -ruN debian.orig/control debian/control
+--- debian.orig/control	2015-04-18 14:55:34.341738444 +0200
++++ debian/control	2015-04-05 19:11:09.000000000 +0200
+@@ -1,11 +1,13 @@
+ Source: arduino
+ Section: electronics
+ Priority: extra
+-Maintainer: Scott Howard <showard@debian.org>
++Maintainer: ShorTie
+ Uploaders: Philip Hands <phil@hands.com>
+-Build-Depends: debhelper (>= 8), javahelper, default-jdk, 
++Build-Depends: debhelper, javahelper, default-jdk, default-jre, libastylej-jni,
+  libjssc-java, libjna-java, libjsch-java, libjmdns-java,
+- libcommons-logging-java, libcommons-httpclient-java, libcommons-exec-java, ant
++ libcommons-logging-java, libcommons-httpclient-java, libcommons-exec-java, ant,
++ astyle, extra-xdg-menus, policykit-1, default-jre, libastylej-jni,
++ avr-libc, avrdude, gcc, gcc-avr, bossa-cli, gcc-arm-none-eabi
+ Standards-Version: 3.9.5
+ Homepage: http://www.arduino.cc
+ Vcs-Git: git://anonscm.debian.org/collab-maint/arduino.git
+diff -ruN debian.orig/NEWS debian/NEWS
+--- debian.orig/NEWS	2015-04-18 14:55:34.351736988 +0200
++++ debian/NEWS	1970-01-01 01:00:00.000000000 +0100
+@@ -1,8 +0,0 @@
+-arduino (1:1.0+dfsg-8) unstable; urgency=low
+-
+-    The Arduino.mk and ard-parse-boards CLI for arduino are no longer
+-    shipped with the arduino-core package. They are now in the separate
+-    "arduino-mk" package. Please install the new package if you use
+-    that functionality.
+-
+- -- Scott Howard <showard@debian.org>  Sun, 26 Feb 2012 10:08:42 -0500
+diff -ruN debian.orig/patches/adk2install_bssoc.patch debian/patches/adk2install_bssoc.patch
+--- debian.orig/patches/adk2install_bssoc.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/adk2install_bssoc.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,26 +0,0 @@
+-Description: Don't use precombiled bossa or adk2tool binaries.
+-Author: Scott Howard <showard@debian.org>
+-
+-Index: arduino/build/build.xml
+-===================================================================
+---- arduino.orig/build/build.xml	2014-03-07 12:44:52.344146251 -0500
+-+++ arduino/build/build.xml	2014-03-07 12:44:52.336146251 -0500
+-@@ -464,18 +464,6 @@
+-     <copy todir="linux/work" file="linux/dist/arduino" />
+-     <chmod perm="755" file="linux/work/arduino" />
+- 
+--    <mkdir dir="linux/work/hardware/tools" />
+--    <copy file="linux/dist/tools/adk2install" todir="linux/work/hardware/tools" />
+--    <copy file="linux/dist/tools/adk2tool" todir="linux/work/hardware/tools" />
+--    <copy file="linux/dist/tools/avrdude${arch-bits}" tofile="linux/work/hardware/tools/avrdude" />
+--    <copy file="linux/dist/tools/avrdude.conf" todir="linux/work/hardware/tools" />
+--    <copy file="linux/dist/tools/bossac${arch-bits}" tofile="linux/work/hardware/tools/bossac" />
+--
+--    <chmod perm="755" file="linux/work/hardware/tools/avrdude" />
+--    <chmod perm="755" file="linux/work/hardware/tools/bossac" />
+--    <chmod perm="755" file="linux/work/hardware/tools/adk2tool" />
+--    <chmod perm="755" file="linux/work/hardware/tools/adk2install" />
+--
+-     <copy todir="linux/work" file="linux/dist/arduino" />
+-     <chmod perm="755" file="linux/work/arduino" />
+- 
+diff -ruN debian.orig/patches/arm_fix.patch debian/patches/arm_fix.patch
+--- debian.orig/patches/arm_fix.patch	1970-01-01 01:00:00.000000000 +0100
++++ debian/patches/arm_fix.patch	2015-04-05 19:11:09.000000000 +0200
+@@ -0,0 +1,15 @@
++﻿Description: Adjust arch to arm for Raspberry Pi
++
++Index: Arduino-ide-1.5.x/build/build.xml
++===================================================================
++--- Arduino-ide-1.5.x.orig/build/build.xml
+++++ Arduino-ide-1.5.x/build/build.xml
++@@ -13,7 +13,7 @@
++   </condition>
++   <condition property="platform" value="macosx"><os family="mac" /></condition>
++   <condition property="platform" value="windows"><os family="windows" /></condition>
++-  <condition property="platform" value="linux32"><os family="unix" arch="i386" /></condition>
+++  <condition property="platform" value="linux32"><os family="unix" arch="arm" /></condition>
++   <condition property="platform" value="linux64"><os family="unix" arch="amd64" /></condition>
++ 
++   <condition property="macosx"><equals arg1="${platform}" arg2="macosx-old" /></condition>
+diff -ruN debian.orig/patches/const_progmem.patch debian/patches/const_progmem.patch
+--- debian.orig/patches/const_progmem.patch	2015-04-18 14:55:34.321741356 +0200
++++ debian/patches/const_progmem.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,305 +0,0 @@
+-Description: newer gcc requires PROGMEM variables to be consts
+-Author: Scott Howard <showard@debian.org>
+-
+-Index: arduino/libraries/Robot_Control/src/glcdfont.c
+-===================================================================
+---- arduino.orig/libraries/Robot_Control/src/glcdfont.c	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/Robot_Control/src/glcdfont.c	2014-03-07 12:43:12.496143878 -0500
+-@@ -6,7 +6,7 @@
+- 
+- // standard ascii 5x7 font
+- 
+--static unsigned char  font[] PROGMEM = {
+-+static const unsigned char  font[] PROGMEM = {
+-         0x00, 0x00, 0x00, 0x00, 0x00,   
+- 	0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 	
+- 	0x3E, 0x6B, 0x4F, 0x6B, 0x3E, 	
+-Index: arduino/libraries/TFT/src/utility/glcdfont.c
+-===================================================================
+---- arduino.orig/libraries/TFT/src/utility/glcdfont.c	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/TFT/src/utility/glcdfont.c	2014-03-07 12:43:12.496143878 -0500
+-@@ -8,7 +8,7 @@
+- 
+- // standard ascii 5x7 font
+- 
+--static unsigned char  font[] PROGMEM = {
+-+static const unsigned char  font[] PROGMEM = {
+-         0x00, 0x00, 0x00, 0x00, 0x00,   
+- 	0x3E, 0x5B, 0x4F, 0x5B, 0x3E, 	
+- 	0x3E, 0x6B, 0x4F, 0x6B, 0x3E, 	
+-Index: arduino/libraries/TFT/src/utility/Adafruit_ST7735.cpp
+-===================================================================
+---- arduino.orig/libraries/TFT/src/utility/Adafruit_ST7735.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/TFT/src/utility/Adafruit_ST7735.cpp	2014-03-07 12:43:12.496143878 -0500
+-@@ -100,7 +100,7 @@
+- // formatting -- storage-wise this is hundreds of bytes more compact
+- // than the equivalent code.  Companion function follows.
+- #define DELAY 0x80
+--PROGMEM static prog_uchar
+-+PROGMEM static const prog_uchar
+-   Bcmd[] = {                  // Initialization commands for 7735B screens
+-     18,                       // 18 commands in list:
+-     ST7735_SWRESET,   DELAY,  //  1: Software reset, no args, w/delay
+-@@ -293,7 +293,7 @@
+- 
+- // Companion code to the above tables.  Reads and issues
+- // a series of LCD commands stored in PROGMEM byte array.
+--void Adafruit_ST7735::commandList(uint8_t *addr) {
+-+void Adafruit_ST7735::commandList(const uint8_t *addr) {
+- 
+-   uint8_t  numCommands, numArgs;
+-   uint16_t ms;
+-@@ -318,7 +318,7 @@
+- 
+- 
+- // Initialization code common to both 'B' and 'R' type displays
+--void Adafruit_ST7735::commonInit(uint8_t *cmdList) {
+-+void Adafruit_ST7735::commonInit(const uint8_t *cmdList) {
+- 
+-   colstart  = rowstart = 0; // May be overridden in init func
+- 
+-Index: arduino/libraries/TFT/src/utility/Adafruit_ST7735.h
+-===================================================================
+---- arduino.orig/libraries/TFT/src/utility/Adafruit_ST7735.h	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/TFT/src/utility/Adafruit_ST7735.h	2014-03-07 12:43:12.496143878 -0500
+-@@ -130,8 +130,8 @@
+-   void     spiwrite(uint8_t),
+-            writecommand(uint8_t c),
+-            writedata(uint8_t d),
+--           commandList(uint8_t *addr),
+--           commonInit(uint8_t *cmdList);
+-+           commandList(const uint8_t *addr),
+-+           commonInit(const uint8_t *cmdList);
+- //uint8_t  spiread(void);
+- 
+-   boolean  hwSPI;
+-Index: arduino/libraries/Robot_Control/src/Squawk.cpp
+-===================================================================
+---- arduino.orig/libraries/Robot_Control/src/Squawk.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/Robot_Control/src/Squawk.cpp	2014-03-07 12:43:12.496143878 -0500
+-@@ -81,7 +81,7 @@
+- uint8_t pcm = 128;
+- 
+- // ProTracker period tables
+--uint16_t period_tbl[84] PROGMEM = {
+-+const uint16_t period_tbl[84] PROGMEM = {
+-   3424, 3232, 3048, 2880, 2712, 2560, 2416, 2280, 2152, 2032, 1920, 1814,
+-   1712, 1616, 1524, 1440, 1356, 1280, 1208, 1140, 1076, 1016,  960,  907,
+-    856,  808,  762,  720,  678,  640,  604,  570,  538,  508,  480,  453,
+-@@ -92,7 +92,7 @@
+- };
+- 
+- // ProTracker sine table
+--int8_t sine_tbl[32] PROGMEM = {
+-+const int8_t sine_tbl[32] PROGMEM = {
+-   0x00, 0x0C, 0x18, 0x25, 0x30, 0x3C, 0x47, 0x51, 0x5A, 0x62, 0x6A, 0x70, 0x76, 0x7A, 0x7D, 0x7F,
+-   0x7F, 0x7F, 0x7D, 0x7A, 0x76, 0x70, 0x6A, 0x62, 0x5A, 0x51, 0x47, 0x3C, 0x30, 0x25, 0x18, 0x0C,
+- };
+-@@ -598,4 +598,4 @@
+-   }
+- 
+-   lockout = false;
+--}
+-\ No newline at end of file
+-+}
+-Index: arduino/libraries/Robot_Control/src/SquawkSD.cpp
+-===================================================================
+---- arduino.orig/libraries/Robot_Control/src/SquawkSD.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/Robot_Control/src/SquawkSD.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -13,7 +13,7 @@
+- 
+- static StreamFile file;
+- 
+--extern uint16_t period_tbl[84] PROGMEM;
+-+const extern uint16_t period_tbl[84] PROGMEM;
+- 
+- void SquawkSynthSD::play(Fat16 melody) {
+- 	SquawkSynth::pause();
+-@@ -179,4 +179,4 @@
+-       out.write(note[2] | (sample[2] == 0 ? 0x00 : 0x80));
+-     }
+-   }
+--}*/
+-\ No newline at end of file
+-+}*/
+-Index: arduino/libraries/Robot_Control/src/utility/scripts_Hello_User.h
+-===================================================================
+---- arduino.orig/libraries/Robot_Control/src/utility/scripts_Hello_User.h	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/Robot_Control/src/utility/scripts_Hello_User.h	2014-03-07 12:43:12.500143878 -0500
+-@@ -4,20 +4,20 @@
+- //as the ram of Arduino is very tiny, keeping too many string in it
+- //can kill the program
+- 
+--prog_char hello_user_script1[] PROGMEM="What's your name?";
+--prog_char hello_user_script2[] PROGMEM="Give me a name!";
+--prog_char hello_user_script3[] PROGMEM="And the country?";
+--prog_char hello_user_script4[] PROGMEM="The city you're in?";
+--prog_char hello_user_script5[] PROGMEM="  Plug me to\n\n  your computer\n\n  and start coding!";
+--
+--prog_char hello_user_script6[] PROGMEM="     Hello User!\n\n It's me, your robot\n\n    I'm alive! <3";
+--prog_char hello_user_script7[] PROGMEM="  First I need some\n\n   input from you!";
+--prog_char hello_user_script8[] PROGMEM="     Use the knob\n\n   to select letters";
+--prog_char hello_user_script9[] PROGMEM="   Use L/R button\n\n to move the cursor,\n\n  middle to confirm";
+--prog_char hello_user_script10[] PROGMEM="  Press middle key\n   to continue...";
+--prog_char hello_user_script11[] PROGMEM="  Choose \"enter\" to\n\n  finish the input";
+-+const prog_char hello_user_script1[] PROGMEM="What's your name?";
+-+const prog_char hello_user_script2[] PROGMEM="Give me a name!";
+-+const prog_char hello_user_script3[] PROGMEM="And the country?";
+-+const prog_char hello_user_script4[] PROGMEM="The city you're in?";
+-+const prog_char hello_user_script5[] PROGMEM="  Plug me to\n\n  your computer\n\n  and start coding!";
+-+
+-+const prog_char hello_user_script6[] PROGMEM="     Hello User!\n\n It's me, your robot\n\n    I'm alive! <3";
+-+const prog_char hello_user_script7[] PROGMEM="  First I need some\n\n   input from you!";
+-+const prog_char hello_user_script8[] PROGMEM="     Use the knob\n\n   to select letters";
+-+const prog_char hello_user_script9[] PROGMEM="   Use L/R button\n\n to move the cursor,\n\n  middle to confirm";
+-+const prog_char hello_user_script10[] PROGMEM="  Press middle key\n   to continue...";
+-+const prog_char hello_user_script11[] PROGMEM="  Choose \"enter\" to\n\n  finish the input";
+- 
+--PROGMEM const char *scripts_Hello_User[]={
+-+const char *scripts_Hello_User[]={
+-   hello_user_script1,
+-   hello_user_script2,
+-   hello_user_script3,
+-@@ -48,4 +48,4 @@
+-   textManager.writeText(line,col,buffer);
+- }
+- 
+--*/
+-\ No newline at end of file
+-+*/
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1BaseProvider.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1BaseProvider.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1BaseProvider.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -12,7 +12,7 @@
+- 	return theGSM3ShieldV1ModemCore.getCommandError();
+- };
+- 
+--void GSM3ShieldV1BaseProvider::prepareAuxLocate(PROGMEM prog_char str[], char auxLocate[])
+-+void GSM3ShieldV1BaseProvider::prepareAuxLocate(PROGMEM const prog_char str[], char auxLocate[])
+- {
+- 	int i=0;
+- 	char c;
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1BaseProvider.h
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1BaseProvider.h	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1BaseProvider.h	2014-03-07 12:43:12.500143878 -0500
+-@@ -54,7 +54,7 @@
+- 		@param str			PROGMEN
+- 		@param auxLocate	Buffer where to locate strings
+- 	*/
+--	void prepareAuxLocate(PROGMEM prog_char str[], char auxLocate[]);
+-+	void prepareAuxLocate(PROGMEM const prog_char str[], char auxLocate[]);
+- 
+- 	/** Manages modem response
+- 		@param from 		Initial byte of buffer
+-@@ -70,4 +70,4 @@
+- 
+- };
+- 
+--#endif
+-\ No newline at end of file
+-+#endif
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1AccessProvider.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1AccessProvider.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1AccessProvider.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -6,8 +6,8 @@
+- #define __TOUTMODEMCONFIGURATION__ 5000//equivalent to 30000 because of time in interrupt routine.
+- #define __TOUTAT__ 1000
+- 
+--char _command_AT[] PROGMEM = "AT";
+--char _command_CGREG[] PROGMEM = "AT+CGREG?";
+-+const char _command_AT[] PROGMEM = "AT";
+-+const char _command_CGREG[] PROGMEM = "AT+CGREG?";
+- 
+- 
+- GSM3ShieldV1AccessProvider::GSM3ShieldV1AccessProvider(bool debug)
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1DataNetworkProvider.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1DataNetworkProvider.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1DataNetworkProvider.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -1,8 +1,8 @@
+- #include <GSM3ShieldV1DataNetworkProvider.h>
+- #include <Arduino.h>
+- 
+--char _command_CGATT[] PROGMEM = "AT+CGATT=";
+--char _command_SEPARATOR[] PROGMEM = "\",\"";
+-+const char _command_CGATT[] PROGMEM = "AT+CGATT=";
+-+const char _command_SEPARATOR[] PROGMEM = "\",\"";
+- 
+- //Attach GPRS main function.	
+- GSM3_NetworkStatus_t GSM3ShieldV1DataNetworkProvider::attachGPRS(char* apn, char* user_name, char* password, bool synchronous)
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1MultiClientProvider.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1MultiClientProvider.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1MultiClientProvider.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -1,7 +1,7 @@
+- #include <GSM3ShieldV1MultiClientProvider.h>
+- #include <GSM3ShieldV1ModemCore.h>
+- 
+--char _command_MultiQISRVC[] PROGMEM = "AT+QISRVC=";
+-+const char _command_MultiQISRVC[] PROGMEM = "AT+QISRVC=";
+- 
+- #define __TOUTFLUSH__ 10000
+- 
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1MultiServerProvider.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1MultiServerProvider.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1MultiServerProvider.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -4,7 +4,7 @@
+- 
+- #define __NCLIENTS_MAX__ 3
+- 
+--char _command_QILOCIP[] PROGMEM = "AT+QILOCIP";
+-+const char _command_QILOCIP[] PROGMEM = "AT+QILOCIP";
+- 
+- GSM3ShieldV1MultiServerProvider::GSM3ShieldV1MultiServerProvider()
+- {
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1ModemCore.cpp
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1ModemCore.cpp	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1ModemCore.cpp	2014-03-07 12:43:12.500143878 -0500
+-@@ -82,6 +82,13 @@
+- }
+- 
+- //Generic command (const string).
+-+void GSM3ShieldV1ModemCore::genericCommand_rq(const char* str, bool addCR)
+-+{
+-+	theBuffer().flush();
+-+	writePGM(str, addCR);
+-+}
+-+
+-+//Generic command (const string).
+- void GSM3ShieldV1ModemCore::genericCommand_rqc(const char* str, bool addCR)
+- {
+- 	theBuffer().flush();
+-@@ -157,7 +164,7 @@
+- 
+- };
+- 
+--size_t GSM3ShieldV1ModemCore::writePGM(PROGMEM prog_char str[], bool CR)
+-+size_t GSM3ShieldV1ModemCore::writePGM(PROGMEM const prog_char str[], bool CR)
+- {
+- 	int i=0;
+- 	char c;
+-Index: arduino/libraries/GSM/src/GSM3ShieldV1ModemCore.h
+-===================================================================
+---- arduino.orig/libraries/GSM/src/GSM3ShieldV1ModemCore.h	2014-03-07 12:43:12.508143878 -0500
+-+++ arduino/libraries/GSM/src/GSM3ShieldV1ModemCore.h	2014-03-07 12:43:12.504143878 -0500
+-@@ -167,7 +167,7 @@
+- 			@param CR			Carriadge return adding automatically
+- 			@return size
+- 		 */
+--		virtual size_t writePGM(PROGMEM prog_char str[], bool CR=true);
+-+		virtual size_t writePGM(PROGMEM const prog_char str[], bool CR=true);
+- 		
+- 		/** Establish debug mode
+- 			@param db			Boolean that indicates debug on or off
+-@@ -257,4 +257,4 @@
+- 
+- extern GSM3ShieldV1ModemCore theGSM3ShieldV1ModemCore;
+- 
+--#endif
+-\ No newline at end of file
+-+#endif
+diff -ruN debian.orig/patches/depricated_typedef_support.patch debian/patches/depricated_typedef_support.patch
+--- debian.orig/patches/depricated_typedef_support.patch	2015-04-18 14:55:34.321741356 +0200
++++ debian/patches/depricated_typedef_support.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,22 +0,0 @@
+-Description: newer avr-libc debricated some typedefs, this enables compatabillity
+-Author: Scott Howard <showard@debian.org>
+-
+-Index: arduino/hardware/arduino/avr/platform.txt
+-===================================================================
+---- arduino.orig/hardware/arduino/avr/platform.txt	2014-03-07 12:43:40.520144544 -0500
+-+++ arduino/hardware/arduino/avr/platform.txt	2014-03-07 12:44:39.108145937 -0500
+-@@ -14,12 +14,12 @@
+- # Default "compiler.path" is correct, change only if you want to overidde the initial value
+- #compiler.path={ide.path}/tools/avr/bin/..
+- compiler.c.cmd=avr-gcc
+--compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD
+-+compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__
+- compiler.c.elf.flags=-Os -Wl,--gc-sections
+- compiler.c.elf.cmd=avr-gcc
+- compiler.S.flags=-c -g -x assembler-with-cpp
+- compiler.cpp.cmd=avr-g++
+--compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD
+-+compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__
+- compiler.ar.cmd=avr-ar
+- compiler.ar.flags=rcs
+- compiler.objcopy.cmd=avr-objcopy
+diff -ruN debian.orig/patches/gcc47_avr.patch debian/patches/gcc47_avr.patch
+--- debian.orig/patches/gcc47_avr.patch	2015-04-18 14:55:34.321741356 +0200
++++ debian/patches/gcc47_avr.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,142 +0,0 @@
+-Description: patch to work with libc 1.8.0 and gcc 4.7
+-Bug: http://andybrown.me.uk/wk/2012/04/28/avr-gcc-4-7-0-and-avr-libc-1-8-0-compiled-for-windows/
+-Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=677294
+-Author: Andy Brown <http://andybrown.me.uk/wk/>
+-Index: arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp
+-===================================================================
+---- arduino.orig/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp	2014-03-07 12:50:11.796153843 -0500
+-+++ arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp	2014-03-07 12:50:11.784153843 -0500
+-@@ -1,3 +1,5 @@
+-+#define __AVR_LIBC_DEPRECATED_ENABLE__
+-+
+- /*
+-   HardwareSerial.cpp - Hardware serial library for Wiring
+-   Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+-Index: arduino/hardware/arduino/avr/cores/arduino/IPAddress.cpp
+-===================================================================
+---- arduino.orig/hardware/arduino/avr/cores/arduino/IPAddress.cpp	2014-03-07 12:50:11.796153843 -0500
+-+++ arduino/hardware/arduino/avr/cores/arduino/IPAddress.cpp	2014-03-07 12:51:39.968155939 -0500
+-@@ -22,42 +22,42 @@
+- 
+- IPAddress::IPAddress()
+- {
+--    memset(_address, 0, sizeof(_address));
+-+    memset(_address.a8, 0, sizeof(_address));
+- }
+- 
+- IPAddress::IPAddress(uint8_t first_octet, uint8_t second_octet, uint8_t third_octet, uint8_t fourth_octet)
+- {
+--    _address[0] = first_octet;
+--    _address[1] = second_octet;
+--    _address[2] = third_octet;
+--    _address[3] = fourth_octet;
+-+    _address.a8[0] = first_octet;
+-+    _address.a8[1] = second_octet;
+-+    _address.a8[2] = third_octet;
+-+    _address.a8[3] = fourth_octet;
+- }
+- 
+- IPAddress::IPAddress(uint32_t address)
+- {
+--    memcpy(_address, &address, sizeof(_address));
+-+    _address.a32=address;
+- }
+- 
+- IPAddress::IPAddress(const uint8_t *address)
+- {
+--    memcpy(_address, address, sizeof(_address));
+-+    memcpy(_address.a8, address, sizeof(_address));
+- }
+- 
+- IPAddress& IPAddress::operator=(const uint8_t *address)
+- {
+--    memcpy(_address, address, sizeof(_address));
+-+    memcpy(_address.a8, address, sizeof(_address));
+-     return *this;
+- }
+- 
+- IPAddress& IPAddress::operator=(uint32_t address)
+- {
+--    memcpy(_address, (const uint8_t *)&address, sizeof(_address));
+-+    _address.a32=address;
+-     return *this;
+- }
+- 
+- bool IPAddress::operator==(const uint8_t* addr) const
+- {
+--    return memcmp(addr, _address, sizeof(_address)) == 0;
+-+    return memcmp(addr, _address.a8, sizeof(_address)) == 0;
+- }
+- 
+- size_t IPAddress::printTo(Print& p) const
+-@@ -65,10 +65,10 @@
+-     size_t n = 0;
+-     for (int i =0; i < 3; i++)
+-     {
+--        n += p.print(_address[i], DEC);
+-+        n += p.print(_address.a8[i], DEC);
+-         n += p.print('.');
+-     }
+--    n += p.print(_address[3], DEC);
+-+    n += p.print(_address.a8[3], DEC);
+-     return n;
+- }
+- 
+-Index: arduino/hardware/arduino/avr/cores/arduino/IPAddress.h
+-===================================================================
+---- arduino.orig/hardware/arduino/avr/cores/arduino/IPAddress.h	2014-03-07 12:50:11.796153843 -0500
+-+++ arduino/hardware/arduino/avr/cores/arduino/IPAddress.h	2014-03-07 12:50:11.788153843 -0500
+-@@ -27,12 +27,16 @@
+- 
+- class IPAddress : public Printable {
+- private:
+--    uint8_t _address[4];  // IPv4 address
+-+	union {
+-+		uint8_t a8[4];  // IPv4 address
+-+		uint32_t a32;
+-+	} _address;
+-+	
+-     // Access the raw byte array containing the address.  Because this returns a pointer
+-     // to the internal structure rather than a copy of the address this function should only
+-     // be used when you know that the usage of the returned uint8_t* will be transient and not
+-     // stored.
+--    uint8_t* raw_address() { return _address; };
+-+    uint8_t* raw_address() { return _address.a8; }
+- 
+- public:
+-     // Constructors
+-@@ -43,13 +47,13 @@
+- 
+-     // Overloaded cast operator to allow IPAddress objects to be used where a pointer
+-     // to a four-byte uint8_t array is expected
+--    operator uint32_t() const { return *((uint32_t*)_address); };
+--    bool operator==(const IPAddress& addr) const { return (*((uint32_t*)_address)) == (*((uint32_t*)addr._address)); };
+-+    operator uint32_t() { return _address.a32; }
+-+    bool operator==(const IPAddress& addr) { return _address.a32 == addr._address.a32; };
+-     bool operator==(const uint8_t* addr) const;
+- 
+-     // Overloaded index operator to allow getting and setting individual octets of the address
+--    uint8_t operator[](int index) const { return _address[index]; };
+--    uint8_t& operator[](int index) { return _address[index]; };
+-+    uint8_t operator[](int index) const { return _address.a8[index]; };
+-+    uint8_t& operator[](int index) { return _address.a8[index]; };
+- 
+-     // Overloaded copy operators to allow initialisation of IPAddress objects from other types
+-     IPAddress& operator=(const uint8_t *address);
+-Index: arduino/libraries/Ethernet/src/Ethernet.cpp
+-===================================================================
+---- arduino.orig/libraries/Ethernet/src/Ethernet.cpp	2014-03-07 12:50:11.796153843 -0500
+-+++ arduino/libraries/Ethernet/src/Ethernet.cpp	2014-03-07 12:50:11.788153843 -0500
+-@@ -62,9 +62,9 @@
+- {
+-   W5100.init();
+-   W5100.setMACAddress(mac);
+--  W5100.setIPAddress(local_ip._address);
+--  W5100.setGatewayIp(gateway._address);
+--  W5100.setSubnetMask(subnet._address);
+-+  W5100.setIPAddress(local_ip._address.a8);
+-+  W5100.setGatewayIp(gateway._address.a8);
+-+  W5100.setSubnetMask(subnet._address.a8);
+-   _dnsServerAddress = dns_server;
+- }
+- 
+diff -ruN debian.orig/patches/install_jar_links.patch debian/patches/install_jar_links.patch
+--- debian.orig/patches/install_jar_links.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/install_jar_links.patch	2015-04-05 19:28:32.000000000 +0200
+@@ -1,17 +1,15 @@
+-Description: Prevents ant from following symlinks and including library jars
+- in debian package
+-Author: Scott Howard <showard314@gmail.com>
++﻿Description: Prevents ant from following symlinks and including library jars
+ 
+-Index: arduino/build/build.xml
++Index: Arduino-1.6.3/build/build.xml
+ ===================================================================
+---- arduino.orig/build/build.xml	2014-03-07 12:27:40.840121736 -0500
+-+++ arduino/build/build.xml	2014-03-07 12:27:40.832121736 -0500
+-@@ -38,7 +38,7 @@
+-   </condition>
++--- Arduino-1.6.3.orig/build/build.xml
+++++ Arduino-1.6.3/build/build.xml
++@@ -49,7 +49,7 @@
++   <property name="MACOSX_BUNDLED_JVM" value="${java.home}/../"/>
+  
+    <!-- Libraries required for running arduino -->
+ -  <fileset dir=".." id="runtime.jars">
+ +  <fileset dir=".." id="runtime.jars" followsymlinks="no">
+-     <include name="core/core.jar" />
++     <include name="arduino-core/arduino-core.jar" />
+      <include name="app/pde.jar" />
+-     <include name="app/lib/commons-codec-1.7.jar" />
++     <include name="app/lib/*.jar" />
+diff -ruN debian.orig/patches/no-caller-saves.patch debian/patches/no-caller-saves.patch
+--- debian.orig/patches/no-caller-saves.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/no-caller-saves.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,25 +0,0 @@
+-Desciption: WiFi.cpp triggers GCC bug, this is a workaround until gcc bug is fixed
+-Author: Scott Howard <showard@debian.org>
+-Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=698254
+-Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/arduino/+bug/1112499
+-Bug-Upstream: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50925
+-
+-Index: arduino/hardware/arduino/avr/platform.txt
+-===================================================================
+---- arduino.orig/hardware/arduino/avr/platform.txt	2014-03-07 12:45:02.892146502 -0500
+-+++ arduino/hardware/arduino/avr/platform.txt	2014-03-07 12:45:31.816147189 -0500
+-@@ -14,12 +14,12 @@
+- # Default "compiler.path" is correct, change only if you want to overidde the initial value
+- #compiler.path={ide.path}/tools/avr/bin/..
+- compiler.c.cmd=avr-gcc
+--compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__
+-+compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__ -fno-caller-saves
+- compiler.c.elf.flags=-Os -Wl,--gc-sections
+- compiler.c.elf.cmd=avr-gcc
+- compiler.S.flags=-c -g -x assembler-with-cpp
+- compiler.cpp.cmd=avr-g++
+--compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__
+-+compiler.cpp.flags=-c -g -Os -w -fno-exceptions -ffunction-sections -fdata-sections -MMD -D__PROG_TYPES_COMPAT__ -fno-caller-saves
+- compiler.ar.cmd=avr-ar
+- compiler.ar.flags=rcs
+- compiler.objcopy.cmd=avr-objcopy
+diff -ruN debian.orig/patches/no_download_libastylej.patch debian/patches/no_download_libastylej.patch
+--- debian.orig/patches/no_download_libastylej.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/no_download_libastylej.patch	2015-04-05 20:14:45.000000000 +0200
+@@ -1,18 +1,20 @@
+-Description: don't download libastylj.so
+-Author: Scott Howard <showard@debian.org>
+-
+-Index: arduino/build/build.xml
++﻿Description: don't download libastylj.so
++Index: Arduino-1.6.3/build/build.xml
+ ===================================================================
+---- arduino.orig/build/build.xml	2014-03-07 14:42:19.536313738 -0500
+-+++ arduino/build/build.xml	2014-03-07 14:43:44.576315759 -0500
+-@@ -467,10 +467,6 @@
++--- Arduino-1.6.3.orig/build/build.xml
+++++ Arduino-1.6.3/build/build.xml
++@@ -597,14 +597,6 @@
+      <copy todir="linux/work" file="linux/dist/arduino" />
+      <chmod perm="755" file="linux/work/arduino" />
+  
+--    <get src="http://downloads.arduino.cc/libastylej-2.03.zip" dest="linux" usetimestamp="true" skipexisting="true" />
+--    <unzip src="linux/libastylej-2.03.zip" dest="linux" overwrite="true"/>
++-    <antcall target="unzip">
++-      <param name="archive_file" value="./libastylej-2.05.zip" />
++-      <param name="archive_url" value="http://arduino.cc/download.php?f=/libastylej-2.05.zip" />
++-      <param name="final_folder" value="${staging_folder}/libastylej" />
++-      <param name="dest_folder" value="${staging_folder}" />
++-    </antcall>
+ -    <copy file="linux/libastylej/libastylej${arch-bits}.so" tofile="linux/work/lib/libastylej.so" />
+ -    <chmod perm="755" file="linux/work/lib/libastylej.so" />
+    </target>
+  
+-   <target name="linux32-build" depends="linux-build" description="Build linux (32-bit) version">
++   <target name="linux32-build" depends="linux-build" unless="light_bundle" description="Build linux (32-bit) version">
+diff -ruN debian.orig/patches/no-macosx-windows-build.patch debian/patches/no-macosx-windows-build.patch
+--- debian.orig/patches/no-macosx-windows-build.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/no-macosx-windows-build.patch	1970-01-01 01:00:00.000000000 +0100
+@@ -1,16 +0,0 @@
+-Description: Don't do anything to windows or macosx directories
+-Author: Scott Howard <showard@debian.org>
+-
+-Index: arduino/build/build.xml
+-===================================================================
+---- arduino.orig/build/build.xml	2014-03-07 12:44:47.332146132 -0500
+-+++ arduino/build/build.xml	2014-03-07 12:44:47.324146132 -0500
+-@@ -798,7 +798,7 @@
+-   <!-- - - - - - - - -->
+- 
+-   <target name="clean" description="Perform a spring cleaning"
+--	  depends="linux-clean, windows-clean, macosx-clean, subprojects-clean">
+-+	  depends="linux-clean, subprojects-clean">
+-   </target>
+- 
+- </project>
+diff -ruN debian.orig/patches/path_fix.patch debian/patches/path_fix.patch
+--- debian.orig/patches/path_fix.patch	1970-01-01 01:00:00.000000000 +0100
++++ debian/patches/path_fix.patch	2015-04-08 10:40:53.000000000 +0200
+@@ -0,0 +1,57 @@
++Index: Arduino-1.6.3/hardware/arduino/avr/platform.txt
++===================================================================
++--- Arduino-1.6.3.orig/hardware/arduino/avr/platform.txt
+++++ Arduino-1.6.3/hardware/arduino/avr/platform.txt
++@@ -12,7 +12,7 @@ version=1.6.3
++ # --------------------- 
++ 
++ # Default "compiler.path" is correct, change only if you want to overidde the initial value
++-compiler.path={runtime.tools.avr-gcc.path}/bin/
+++compiler.path=/usr/bin/
++ compiler.c.cmd=avr-gcc
++ compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -MMD
++ # -w flag added to avoid printing a wrong warning http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59396
++@@ -75,9 +75,9 @@ recipe.size.regex.eeprom=^(?:\.eeprom)\s
++ # AVR Uploader/Programmers tools
++ # ------------------------------
++ 
++-tools.avrdude.path={runtime.tools.avrdude.path}
++-tools.avrdude.cmd.path={path}/bin/avrdude
++-tools.avrdude.config.path={path}/etc/avrdude.conf
+++tools.avrdude.path=/usr/
+++tools.avrdude.cmd.path=/usr/bin/avrdude
+++tools.avrdude.config.path=/etc/avrdude.conf
++ 
++ tools.avrdude.upload.params.verbose=-v
++ tools.avrdude.upload.params.quiet=-q -q
++@@ -93,7 +93,7 @@ tools.avrdude.erase.pattern="{cmd.path}"
++ 
++ tools.avrdude.bootloader.params.verbose=-v
++ tools.avrdude.bootloader.params.quiet=-q -q
++-tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} "-Uflash:w:{runtime.platform.path}/bootloaders/{bootloader.file}:i" -Ulock:w:{bootloader.lock_bits}:m
+++tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verbose} -p{build.mcu} -c{protocol} {program.extra_params} "-Uflash:w:/usr/share/arduino/hardware/arduino/avr/bootloaders/{bootloader.file}:i" -Ulock:w:{bootloader.lock_bits}:m
++ 
++ 
++ # USB Default Flags
++Index: Arduino-1.6.3/hardware/arduino/sam/platform.txt
++===================================================================
++--- Arduino-1.6.3.orig/hardware/arduino/sam/platform.txt
+++++ Arduino-1.6.3/hardware/arduino/sam/platform.txt
++@@ -10,7 +10,7 @@ version=1.6.3
++ # SAM3 compile variables
++ # ----------------------
++ 
++-compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+++compiler.path=/usr/bin/
++ compiler.c.cmd=arm-none-eabi-gcc
++ compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -Dprintf=iprintf -MMD
++ compiler.c.elf.cmd=arm-none-eabi-gcc
++@@ -76,7 +76,7 @@ recipe.size.regex=\.text\s+([0-9]+).*
++ # SAM3 Uploader tools
++ # -------------------
++ 
++-tools.bossac.path={runtime.tools.bossac.path}
+++tools.bossac.path=/usr/bin/
++ tools.bossac.cmd=bossac
++ tools.bossac.cmd.windows=bossac.exe
++ 
+diff -ruN debian.orig/patches/permission_fix.patch debian/patches/permission_fix.patch
+--- debian.orig/patches/permission_fix.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/permission_fix.patch	2015-04-05 19:27:51.000000000 +0200
+@@ -1,15 +1,11 @@
+-Author: Peter Oliver (mavit on github), edited by
+- showard@debian
+-Description: Uses pkexec to add user to groups dailout and tty
+-Bug: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=652523
+-Index: arduino/build/linux/dist/arduino
+ ===================================================================
+---- arduino.orig/build/linux/dist/arduino	2014-03-07 12:30:01.992125091 -0500
+-+++ arduino/build/linux/dist/arduino	2014-03-07 12:31:08.584126673 -0500
+-@@ -1,4 +1,17 @@
+--#!/bin/sh
+-+#!/bin/bash
+-+
++Index: Arduino-1.6.3/build/linux/dist/arduino
++===================================================================
++--- Arduino-1.6.3.orig/build/linux/dist/arduino
+++++ Arduino-1.6.3/build/linux/dist/arduino
++@@ -1,5 +1,18 @@
++ #!/bin/bash
++ 
+ +if [[ `id -u` -ne 0 ]]; then
+ +#    for group in dialout tty; do
+ +    for group in dialout; do
+@@ -22,6 +18,7 @@
+ +	pkexec /usr/bin/arduino-add-groups
+ +    fi
+ +fi
+- 
+++
+  CURDIR=`pwd`
+- APPDIR=/usr/share/arduino
++ APPDIR="$(dirname -- "$(readlink -f -- "${0}")" )"
++ 
+diff -ruN debian.orig/patches/remove_copying_binaries.patch debian/patches/remove_copying_binaries.patch
+--- debian.orig/patches/remove_copying_binaries.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/remove_copying_binaries.patch	2015-04-05 20:14:53.000000000 +0200
+@@ -1,55 +1,21 @@
+-Description: Arduino copies precompiled binaries into the build tree,
+- stop that
+-Author: Scott Howard <showard@debian.org>
+-Index: arduino/build/build.xml
++﻿Description: Arduino copies precompiled binaries into the build tree,
++
+ ===================================================================
+---- arduino.orig/build/build.xml	2014-03-07 12:29:00.584123631 -0500
+-+++ arduino/build/build.xml	2014-03-07 12:29:40.620124583 -0500
+-@@ -486,18 +486,6 @@
++Index: Arduino-1.6.3/build/build.xml
++===================================================================
++--- Arduino-1.6.3.orig/build/build.xml
+++++ Arduino-1.6.3/build/build.xml
++@@ -600,13 +600,6 @@
+    </target>
+  
+-   <target name="linux32-build" depends="linux-build" description="Build linux (32-bit) version">
+--    <!-- Unzip ARM tools -->
+--    <antcall target="unzip-arm-toolchain">
+--      <param name="dist_file" value="gcc-arm-none-eabi-4.4.1-2010q1-188-linux32.tar.gz" />
+--      <param name="dist_url" value="http://arduino.googlecode.com/files/gcc-arm-none-eabi-4.4.1-2010q1-188-linux32.tar.gz" />
+--      <param name="dist_check_file" value="g++_arm_none_eabi" />
++   <target name="linux32-build" depends="linux-build" unless="light_bundle" description="Build linux (32-bit) version">
++-    <antcall target="avr-toolchain-bundle">
++-      <param name="unpack_target" value="untar"/>
++-      <param name="gcc_archive_file" value="avr-gcc-4.8.1-arduino3-i686-pc-linux-gnu.tar.bz2"/>
++-      <param name="gcc_version" value="4.8.1-arduino3"/>
++-      <param name="avrdude_archive_file" value="avrdude-6.0.1-arduino3-i686-pc-linux-gnu.tar.bz2"/>
++-      <param name="avrdude_version" value="6.0.1-arduino3"/>
+ -    </antcall>
+--
+--    <!-- Unzip AVR tools -->
+--    <exec executable="tar" dir="linux/work/hardware">
+--      <arg value="-xjf"/>
+--      <arg value="../../avr_tools_linux32.tar.bz2"/>
+--    </exec>
+- 
+-   </target>
+- 
+-@@ -508,16 +496,9 @@
+- 
+-     <!-- Unzip ARM tools -->
+-     <antcall target="unzip-arm-toolchain">
+--      <param name="dist_file" value="gcc-arm-none-eabi-4.4.1-2010q1-188-linux32.tar.gz" />
+--      <param name="dist_url" value="http://arduino.googlecode.com/files/gcc-arm-none-eabi-4.4.1-2010q1-188-linux32.tar.gz" />
+--      <param name="dist_check_file" value="g++_arm_none_eabi" />
+-     </antcall>
+- 
+-     <!-- Unzip AVR tools -->
+--    <exec executable="tar" dir="linux/work/hardware">
+--      <arg value="-xjf"/>
+--      <arg value="../../avr_tools_linux64.tar.bz2"/>
+--    </exec>
+-   </target>
+- 
+-   <target name="linux32-run" depends="linux32-build" description="Run Linux (32-bit) version">
+-@@ -554,11 +535,6 @@
+-     </fail>
+- 
+-     <!-- Unzip toolchain to the destination folder -->
+--    <exec executable="tar">
+--      <arg value="xfz"/>
+--      <arg value="${staging_folder}/dist/${dist_file}"/>
+--      <arg value="--directory=${staging_folder}/work/${staging_hardware_folder}/tools/"/>
+--    </exec>
+    </target>
+  
+-   <target name="linux-dist" depends="build"
++   <target name="linux64-build" depends="linux-build"  unless="light_bundle" description="Build linux (64-bit) version">
+diff -ruN debian.orig/patches/remove_update_warning.patch debian/patches/remove_update_warning.patch
+--- debian.orig/patches/remove_update_warning.patch	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/remove_update_warning.patch	2015-04-08 11:25:24.000000000 +0200
+@@ -2,21 +2,20 @@
+ Author: Scott Howard <showard314@gmail.com>
+ Bug: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=603818
+ 
+-Index: arduino/app/src/processing/app/UpdateCheck.java
++Index: Arduino-1.6.3/app/src/processing/app/UpdateCheck.java
+ ===================================================================
+---- arduino.orig/app/src/processing/app/UpdateCheck.java	2012-03-11 19:09:34.000000000 -0400
+-+++ arduino/app/src/processing/app/UpdateCheck.java	2012-03-11 19:14:55.381231127 -0400
+-@@ -98,27 +98,6 @@
+-         }
++--- Arduino-1.6.3.orig/app/src/processing/app/UpdateCheck.java
+++++ Arduino-1.6.3/app/src/processing/app/UpdateCheck.java
++@@ -99,26 +99,6 @@ public class UpdateCheck implements Runn
+        }
+        Preferences.set("update.last", String.valueOf(now));
+--
++ 
+ -      String prompt =
+ -        _("A new version of Arduino is available,\n" +
+ -          "would you like to visit the Arduino download page?");
+ -        
+ -      if (base.activeEditor != null) {
+--        if (latest > Base.REVISION) {
++-        if (latest > BaseNoGui.REVISION) {
+ -          Object[] options = { _("Yes"), _("No") };
+ -          int result = JOptionPane.showOptionDialog(base.activeEditor,
+ -                                                    prompt,
+diff -ruN debian.orig/patches/sam_fix.patch debian/patches/sam_fix.patch
+--- debian.orig/patches/sam_fix.patch	1970-01-01 01:00:00.000000000 +0100
++++ debian/patches/sam_fix.patch	2015-04-05 20:14:20.000000000 +0200
+@@ -0,0 +1,18 @@
++Index: Arduino-1.6.3/build/build.xml
++===================================================================
++--- Arduino-1.6.3.orig/build/build.xml
+++++ Arduino-1.6.3/build/build.xml
++@@ -1,4 +1,4 @@
++-<?xml version="1.0"?>
+++﻿<?xml version="1.0"?>
++ <project name="Arduino" default="build">
++   <!--echo message="os.name = ${os.name}" /-->
++   <!--echo message="os.arch = ${os.arch}" /-->
++@@ -162,7 +162,6 @@
++   <target name="assemble-hardware" unless="light_bundle">
++     <copy todir="${target.path}/hardware">
++       <fileset dir="../hardware">
++-        <exclude name="arduino/sam/**"/>
++       </fileset>
++     </copy>
++   </target>
+diff -ruN debian.orig/patches/series debian/patches/series
+--- debian.orig/patches/series	2015-04-18 14:55:34.331739900 +0200
++++ debian/patches/series	2015-04-08 10:50:32.000000000 +0200
+@@ -1,14 +1,11 @@
+-remove_update_warning.patch
+-install_jar_links.patch
+-wrapper_for_deb.patch
+-remove_copying_binaries.patch
++arm_fix.patch
++sam_fix.patch
++path_fix.patch
+ permission_fix.patch
+-gcc47_avr.patch
+-const_progmem.patch
+-depricated_typedef_support.patch
+-no-macosx-windows-build.patch
+-adk2install_bssoc.patch
+-no-caller-saves.patch
+-zepto_js.patch
++wrapper_for_deb.patch
++install_jar_links.patch
+ no_download_libastylej.patch
+ system_libastylej.patch
++remove_copying_binaries.patch
++remove_update_warning.patch
++zepto_js.patch
+diff -ruN debian.orig/patches/system_libastylej.patch debian/patches/system_libastylej.patch
+--- debian.orig/patches/system_libastylej.patch	2015-04-18 14:55:34.321741356 +0200
++++ debian/patches/system_libastylej.patch	2015-04-05 19:28:45.000000000 +0200
+@@ -1,30 +1,34 @@
+ Description: Use system astyle, upstream uses a custom version
+-Author: Scott Howard <showard@debian.org>
+-Index: arduino/app/src/cc/arduino/packages/formatter/AStyleInterface.java
++
++Index: Arduino-1.6.3/app/src/cc/arduino/packages/formatter/AStyleInterface.java
+ ===================================================================
+---- arduino.orig/app/src/cc/arduino/packages/formatter/AStyleInterface.java	2014-04-06 19:26:14.177478383 -0400
+-+++ arduino/app/src/cc/arduino/packages/formatter/AStyleInterface.java	2014-04-06 19:26:14.169478383 -0400
+-@@ -1,4 +1,4 @@
++--- Arduino-1.6.3.orig/app/src/cc/arduino/packages/formatter/AStyleInterface.java
+++++ Arduino-1.6.3/app/src/cc/arduino/packages/formatter/AStyleInterface.java
++@@ -27,7 +27,6 @@
++  * Copyright 2015 Arduino LLC (http://www.arduino.cc/)
++  */
++ 
+ -package cc.arduino.packages.formatter;
+-+//package cc.arduino.packages.formatter;
+  
+  import processing.app.Base;
+  
+-Index: arduino/app/src/cc/arduino/packages/formatter/AStyle.java
++Index: Arduino-1.6.3/app/src/cc/arduino/packages/formatter/AStyle.java
+ ===================================================================
+---- arduino.orig/app/src/cc/arduino/packages/formatter/AStyle.java	2014-04-06 19:26:14.177478383 -0400
+-+++ arduino/app/src/cc/arduino/packages/formatter/AStyle.java	2014-04-06 19:26:14.173478383 -0400
+-@@ -1,4 +1,4 @@
++--- Arduino-1.6.3.orig/app/src/cc/arduino/packages/formatter/AStyle.java
+++++ Arduino-1.6.3/app/src/cc/arduino/packages/formatter/AStyle.java
++@@ -27,7 +27,6 @@
++  * Copyright 2015 Arduino LLC (http://www.arduino.cc/)
++  */
++ 
+ -package cc.arduino.packages.formatter;
+-+//package cc.arduino.packages.formatter;
+  
+  import processing.app.Base;
+  import processing.app.Editor;
+-Index: arduino/app/src/processing/app/Editor.java
++Index: Arduino-1.6.3/app/src/processing/app/Editor.java
+ ===================================================================
+---- arduino.orig/app/src/processing/app/Editor.java	2014-04-06 17:53:22.081505456 -0400
+-+++ arduino/app/src/processing/app/Editor.java	2014-04-06 19:27:57.377477881 -0400
+-@@ -905,7 +905,7 @@
++--- Arduino-1.6.3.orig/app/src/processing/app/Editor.java
+++++ Arduino-1.6.3/app/src/processing/app/Editor.java
++@@ -914,7 +914,7 @@ public class Editor extends JFrame imple
+    protected JMenu addInternalTools(JMenu menu) {
+      JMenuItem item;
+  
+diff -ruN debian.orig/patches/wrapper_for_deb.patch debian/patches/wrapper_for_deb.patch
+--- debian.orig/patches/wrapper_for_deb.patch	2015-04-18 14:55:34.321741356 +0200
++++ debian/patches/wrapper_for_deb.patch	2015-04-05 19:28:23.000000000 +0200
+@@ -1,12 +1,12 @@
+ Description: Tells the wrapper where to look for things in debian.
+ Author: Scott Howard <showard314@gmail.com>
+ 
+-Index: arduino/build/linux/dist/arduino
++Index: Arduino-1.6.3/build/linux/dist/arduino
+ ===================================================================
+---- arduino.orig/build/linux/dist/arduino	2014-03-07 12:28:16.564122585 -0500
+-+++ arduino/build/linux/dist/arduino	2014-03-07 12:28:38.172123099 -0500
+-@@ -1,7 +1,7 @@
+- #!/bin/sh
++--- Arduino-1.6.3.orig/build/linux/dist/arduino
+++++ Arduino-1.6.3/build/linux/dist/arduino
++@@ -14,7 +14,7 @@ if [[ `id -u` -ne 0 ]]; then
++ fi
+  
+  CURDIR=`pwd`
+ -APPDIR="$(dirname -- "$(readlink -f -- "${0}")" )"
+@@ -14,7 +14,7 @@
+  
+  cd "$APPDIR"
+  
+-@@ -15,7 +15,7 @@
++@@ -28,7 +28,7 @@ do
+  done
+  export CLASSPATH
+  
+diff -ruN debian.orig/rules debian/rules
+--- debian.orig/rules	2015-04-18 14:55:34.351736988 +0200
++++ debian/rules	2015-04-05 19:37:26.000000000 +0200
+@@ -1,7 +1,7 @@
+ #!/usr/bin/make -f
+ 
+ # Uncomment this to turn on verbose mode.
+-# export DH_VERBOSE=1
++export DH_VERBOSE=1
+ 
+ export JAVA_HOME=/usr/lib/jvm/default-java
+ export CLASSPATH=\
+@@ -19,20 +19,15 @@
+ 	dh $@ --with javahelper
+ 
+ override_dh_clean:
+-	-mkdir build/windows build/macosx #build.xml needs this
+-	rm -rf build/linux/work/hardware/tools
+-	cd core/methods && ant clean
++	cd arduino-core && ant clean
+ 	cd build && ant clean
+ 	rm -f debian/permission-checker/*.class
+ 	dh_clean
+-	rm -r build/windows build/macosx #debian doesn't need this
+ 
+ override_jh_build:
+ 	jh_linkjars
+ 	mkdir -p build/linux/work/hardware/tools
+-	#remove unneeded macosx support
+-	rm -rf app/src/processing/app/macosx
+-	cd core/methods && ant
++	cd arduino-core && ant
+ 	cd build && ant
+ 	rm -f build/linux/work/lib/version.txt && echo $(SVNTAG) > build/linux/work/lib/version.txt #comment out after beta
+ 	javac debian/permission-checker/arduinopc.java
+@@ -51,6 +46,7 @@
+ 	dh_install -Xlicense -XLICENSE -XLicense -XMangler/make.sh -X.elf -X.a -X.lib -X.min.js
+ 	mkdir -p debian/arduino-core/usr/share/arduino/lib
+ 	mv debian/arduino/usr/share/arduino/lib/*.txt debian/arduino-core/usr/share/arduino/lib
++	cp hardware/arduino/sam/variants/arduino_due_x/libsam_sam3x8e_gcc_rel.* debian/arduino-core/usr/share/arduino/hardware/arduino/sam/variants/arduino_due_x
+ 	chmod +x \
+     debian/arduino-core/usr/share/arduino/hardware/arduino/avr/bootloaders/optiboot/makeall \
+     debian/arduino-core/usr/share/arduino/hardware/arduino/avr/firmwares/wifishield/scripts/ArduinoWifiShield_upgrade.sh \
+@@ -60,8 +56,6 @@
+ 
+ override_dh_installdocs:
+ 	dh_installdocs
+-	#Delete links to fetch web based icon (privacy violation, thanks lintian)
+-	sed -i '/favicon\.png/d' debian/arduino-core/usr/share/doc/arduino-core/reference/*.html
+ 
+ override_jh_depends:
+ 	jh_depends -jdefault
+@@ -70,8 +64,7 @@
+ 	${MAKE} -f /usr/share/cdbs/1/rules/utils.mk debian/stamp-copyright-check
+ 	rm debian/stamp-copyright-check
+ 
+-DESTDIR=$(CURDIR)/debian/Arduino-1.5.6-r2
+-#DESTDIR=$(CURDIR)/debian/Arduino-$(SVNTAG)
++DESTDIR=$(CURDIR)/debian/Arduino-$(SVNTAG)
+ TARGZFILE=arduino_$(SVNTAG).orig.tar.gz
+ TARXZFILE=arduino_$(SVNTAG)+dfsg2.orig.tar.xz
+ 
+@@ -86,7 +79,7 @@
+ 	rm -rf $(DESTDIR)/build/linux/dist/tools;\
+ 	#upstream set a bunch of files as execultable that should not be. remove the -x bit
+ 	#find $(DESTDIR) -type f -iname *.jpg -or -iname *.java -or -iname *.pde -or -iname *.h -or -iname *.cpp -or -iname *.c -or -iname makefile -or -iname key*.txt -or -iname key*.gz -or -iname pref*.txt -or -iname '*.txt' -print0 | xargs -0 chmod -x;\
+-	tar Jcf $(CURDIR)/../$(TARXZFILE) -C $(CURDIR)/debian Arduino-1.5.6-r2;\
++	tar Jcf $(CURDIR)/../$(TARXZFILE) -C $(CURDIR)/debian Arduino-1.6.3;\
+ 	rm -fr $(DESTDIR);\
+ 	rm -fr ../$(TARGZFILE)
+ 
