@@ -8,6 +8,9 @@ This repository hosts compiled packages, the patches and additional instructions
 
 See the post at the [Raspberry Pi Forum](https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=92662) for all information and support.
 
+Also see my [blog post](https://nicohood.wordpress.com/2015/01/24/installing-avr-gcc-4-8-1-and-arduino-ide-1-6-on-raspberry-pi/)
+and the [releases](https://github.com/NicoHood/Arduino-IDE-for-Raspberry/releases) for downloads.
+
 [Contact me.](http://www.NicoHood.de)
 
 How to Install
